@@ -20,7 +20,7 @@ namespace HackernNews.Infrastructure
         /// <param name="config">The ConfigurationManager to retrieve configuration settings.</param>
         /// <param name="logger">The ILogger to log information.</param>
         /// <returns>The IServiceCollection with the added services.</returns>
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, ConfigurationManager config, ILogger logger)
+        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration config)
         {
             string? connectionString = config.GetConnectionString("HackerApiClientSettings");
 
@@ -30,8 +30,6 @@ namespace HackernNews.Infrastructure
                 .AddScoped<ICacheService, MemoryCacheService>()
                 .AddRefitClient<IHackerNewSourceApiClient>()
                 .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://hacker-news.firebaseio.com"));
-
-            logger.LogInformation("{Project} services registered", "Infrastructure");
 
             return services;
         }

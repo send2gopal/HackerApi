@@ -1,4 +1,6 @@
 
+using Clean.Architecture.Web.Configurations;
+
 namespace HackernNews.Api
 {
     public class Program
@@ -13,6 +15,8 @@ namespace HackernNews.Api
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddMediatrConfigs();
+            builder.Services.AddServiceConfigs(builder.Configuration);
 
             var app = builder.Build();
 

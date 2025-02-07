@@ -33,7 +33,7 @@ namespace HackernNews.UseCases.Stories.Queries
                     var pagedStories = stories.Skip(request.pageSize * (request.pageNumber - 1)).Take(request.pageSize);
 
                     // Fetch the details of each story in the paged stories
-                    var storyDetails = await Task.WhenAll(pagedStories.Select(id =>
+                    var storyDetailsTasks = pagedStories.Select(id =>
                     {
                         return _cacheService.Get(id.ToString(), async () =>
                         {
@@ -46,10 +46,12 @@ namespace HackernNews.UseCases.Stories.Queries
                                 error => null
                             );
                         });
-                    }));
+                    });
+
+                    var storyDetails = await Task.WhenAll(storyDetailsTasks);
 
                     // Convert the story details to StoryDto objects
-                    var storyDtos = storyDetails.Select(sd => new StoryDto(sd.Id, sd.By, sd.Descendants, sd.Score, sd.Time, sd.Title, sd.Type, sd.Url)).ToList();
+                    var storyDtos = storyDetails.Where(s=> s!=null).Select(sd => new StoryDto(sd.Id, sd.By, sd.Descendants, sd.Score, sd.Time, sd.Title, sd.Type, sd.Url)).ToList();
                     // Return the paged result with the story DTOs
                     return new PagedViewModelResult<StoryDto>(storyDtos, request.pageNumber, request.pageSize, stories.Count());
                 },

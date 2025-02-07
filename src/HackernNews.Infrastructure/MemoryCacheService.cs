@@ -1,6 +1,7 @@
 ﻿using HackernNews.Core.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace HackernNews.Infrastructure
 {
@@ -12,16 +13,16 @@ namespace HackernNews.Infrastructure
     {
         private readonly IMemoryCache _cache;
         private readonly TimeSpan _defaultSlidingExpiration;
-
+        private readonly ILogger<MemoryCacheService> _logger;
         /// <summary>
         /// Initializes a new instance of the <see cref="MemoryCacheService"/> class.
         /// </summary>
         /// <param name="cache">The memory cache instance.</param>
         /// <param name="configuration">The configuration instance.</param>
-        public MemoryCacheService(IMemoryCache cache, IConfiguration configuration)
+        public MemoryCacheService(IMemoryCache cache, IConfiguration configuration, ILogger<MemoryCacheService> logger)
         {
             _cache = cache;
-
+            _logger = logger;
             // Get default sliding expiration from appsettings.json
             _defaultSlidingExpiration = TimeSpan.FromMinutes(
                 configuration.GetValue<int>("CacheSettings:SlidingExpirationMinutes", 10)
@@ -33,9 +34,10 @@ namespace HackernNews.Infrastructure
         {
             if (_cache.TryGetValue(key, out T value) && value != null)
             {
+                _logger.LogInformation($"Cache hit for key: {key}");
                 return value;
             }
-
+            _logger.LogInformation($"Cache miss for key: {key}");
             // Fetch data using provided function
             value = fetch();
 
