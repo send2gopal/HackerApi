@@ -3,7 +3,6 @@ using HackernNews.Infrastructure.DownstreamServices;
 using HackernNews.Infrastructure.HackerNewsSource;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Refit;
 
 namespace HackernNews.Infrastructure
@@ -29,6 +28,7 @@ namespace HackernNews.Infrastructure
                 .AddScoped<IHackerNewsService, HackerNewsService>()
                 .AddScoped<ICacheService, MemoryCacheService>()
                 .AddRefitClient<IHackerNewSourceApiClient>()
+                // TODO: Add the base address for the Hacker News API in app settings.
                 .ConfigureHttpClient(c => c.BaseAddress = new Uri("https://hacker-news.firebaseio.com"));
 
             return services;

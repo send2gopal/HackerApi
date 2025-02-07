@@ -15,8 +15,8 @@ namespace HackernNews.Api
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddMediatrConfigs();
-            builder.Services.AddServiceConfigs(builder.Configuration);
+            builder.Services.AddMediatr();
+            builder.Services.AddLayers(builder.Configuration);
 
             var app = builder.Build();
 
