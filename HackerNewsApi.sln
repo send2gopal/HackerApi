@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HackernNews.UseCases", "src
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{611A9FF6-DC2F-4AA7-8056-D2854053E041}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HackernNews.Api.Test", "src\HackernNews.Api.Test\HackernNews.Api.Test.csproj", "{DC19B54A-3FF1-4604-85F3-E487F7E8884D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{C993B5C7-B1DB-49CE-90BF-937B053054E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C993B5C7-B1DB-49CE-90BF-937B053054E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C993B5C7-B1DB-49CE-90BF-937B053054E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC19B54A-3FF1-4604-85F3-E487F7E8884D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC19B54A-3FF1-4604-85F3-E487F7E8884D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC19B54A-3FF1-4604-85F3-E487F7E8884D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC19B54A-3FF1-4604-85F3-E487F7E8884D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,5 +52,6 @@ Global
 		{E1A0C9CE-D149-4E53-BB29-5B37C70F5D72} = {9333DB37-20DF-4BCF-9088-BEDE365988D2}
 		{17459BB6-9766-4791-A0DA-D10BA750EF26} = {9333DB37-20DF-4BCF-9088-BEDE365988D2}
 		{C993B5C7-B1DB-49CE-90BF-937B053054E9} = {9333DB37-20DF-4BCF-9088-BEDE365988D2}
+		{DC19B54A-3FF1-4604-85F3-E487F7E8884D} = {611A9FF6-DC2F-4AA7-8056-D2854053E041}
 	EndGlobalSection
 EndGlobal
