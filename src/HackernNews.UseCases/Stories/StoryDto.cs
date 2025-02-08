@@ -27,7 +27,7 @@
         /// <summary>  
         /// Gets the time the story was created.  
         /// </summary>  
-        int Time,
+        DateTimeOffset Time,
 
         /// <summary>  
         /// Gets the title of the story.  

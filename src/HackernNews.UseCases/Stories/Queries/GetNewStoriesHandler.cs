@@ -51,7 +51,18 @@ namespace HackernNews.UseCases.Stories.Queries
                     var storyDetails = await Task.WhenAll(storyDetailsTasks);
 
                     // Convert the story details to StoryDto objects
-                    var storyDtos = storyDetails.Where(s=> s!=null).Select(sd => new StoryDto(sd.Id, sd.By, sd.Descendants, sd.Score, sd.Time, sd.Title, sd.Type, sd.Url)).ToList();
+                    var storyDtos = storyDetails
+                                        .Where(s => s != null)
+                                        .Select(sd => new StoryDto(
+                                            sd.Id,
+                                            sd.By,
+                                            sd.Descendants,
+                                            sd.Score,
+                                            DateTimeOffset.FromUnixTimeSeconds(sd.Time),
+                                            sd.Title,
+                                            sd.Type,
+                                            sd.Url))
+                                        .ToList();
                     // Return the paged result with the story DTOs
                     return new PagedViewModelResult<StoryDto>(storyDtos, request.pageNumber, request.pageSize, stories.Count());
                 },

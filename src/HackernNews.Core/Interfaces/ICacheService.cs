@@ -21,8 +21,7 @@
         /// <typeparam name="T">The type of the value to set.</typeparam>
         /// <param name="key">The cache key.</param>
         /// <param name="value">The value to cache.</param>
-        /// <param name="expiration">The expiration time for the cache entry.</param>
-        public void Set<T>(string key, T value, TimeSpan expiration);
+        public void Set<T>(string key, T value);
 
         /// <summary>
         /// Tries to get the cached value for the specified key.

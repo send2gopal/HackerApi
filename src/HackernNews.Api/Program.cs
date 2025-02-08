@@ -1,5 +1,6 @@
 
 using Clean.Architecture.Web.Configurations;
+using HackernNews.Api.Configurations;
 
 namespace HackernNews.Api
 {
@@ -17,7 +18,7 @@ namespace HackernNews.Api
             builder.Services.AddSwaggerGen();
             builder.Services.AddMediatr();
             builder.Services.AddLayers(builder.Configuration);
-
+            builder.Services.AddCorsPolicy();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -26,8 +27,9 @@ namespace HackernNews.Api
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
             app.UseHttpsRedirection();
+            app.UseCorsPolicy();
+            app.UseAppMiddleware();
 
             app.UseAuthorization();
 

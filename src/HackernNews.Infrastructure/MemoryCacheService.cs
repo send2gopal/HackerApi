@@ -1,7 +1,9 @@
 ﻿using HackernNews.Core.Interfaces;
+using HackernNews.Infrastructure.Configurations;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace HackernNews.Infrastructure
 {
@@ -12,21 +14,20 @@ namespace HackernNews.Infrastructure
     public class MemoryCacheService : ICacheService
     {
         private readonly IMemoryCache _cache;
-        private readonly TimeSpan _defaultSlidingExpiration;
+        private readonly CacheSettings _cacheSettings;
         private readonly ILogger<MemoryCacheService> _logger;
         /// <summary>
         /// Initializes a new instance of the <see cref="MemoryCacheService"/> class.
         /// </summary>
         /// <param name="cache">The memory cache instance.</param>
-        /// <param name="configuration">The configuration instance.</param>
-        public MemoryCacheService(IMemoryCache cache, IConfiguration configuration, ILogger<MemoryCacheService> logger)
+        /// <param name="options">The cache settings options.</param>
+        /// <param name="logger">The logger instance.</param>
+        public MemoryCacheService(IMemoryCache cache, IOptions<CacheSettings> cacheSettings, ILogger<MemoryCacheService> logger)
         {
             _cache = cache;
             _logger = logger;
             // Get default sliding expiration from appsettings.json
-            _defaultSlidingExpiration = TimeSpan.FromMinutes(
-                configuration.GetValue<int>("CacheSettings:SlidingExpirationMinutes", 10)
-            );
+            _cacheSettings = cacheSettings.Value?? throw new ArgumentException("Cache settings are required.");
         }
 
         /// <inheritdoc />
@@ -44,7 +45,7 @@ namespace HackernNews.Infrastructure
             // Cache the fetched value with sliding expiration
             var cacheOptions = new MemoryCacheEntryOptions
             {
-                SlidingExpiration = _defaultSlidingExpiration
+                SlidingExpiration = TimeSpan.FromMinutes(_cacheSettings.SlidingExpirationMinutes)
             };
 
             if (absoluteExpiration.HasValue)
@@ -58,11 +59,11 @@ namespace HackernNews.Infrastructure
         }
 
         /// <inheritdoc />
-        public void Set<T>(string key, T value, TimeSpan expiration)
+        public void Set<T>(string key, T value)
         {
             _cache.Set(key, value, new MemoryCacheEntryOptions
             {
-                SlidingExpiration = expiration
+                SlidingExpiration = TimeSpan.FromMinutes(_cacheSettings.SlidingExpirationMinutes)
             });
         }
 
