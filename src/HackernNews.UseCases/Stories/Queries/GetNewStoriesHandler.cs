@@ -1,4 +1,5 @@
-﻿using HackernNews.Core.Interfaces;
+﻿using HackernNews.Core.Entities;
+using HackernNews.Core.Interfaces;
 using HackernNews.Core.Shared;
 using MediatR;
 using OneOf;
@@ -32,27 +33,11 @@ namespace HackernNews.UseCases.Stories.Queries
                     // Skip the stories based on the page number and take the number of stories based on the page size
                     var pagedStories = stories.Skip(request.pageSize * (request.pageNumber - 1)).Take(request.pageSize);
 
-                    // Fetch the details of each story in the paged stories
-                    var storyDetailsTasks = pagedStories.Select(id =>
-                    {
-                        return _cacheService.Get(id.ToString(), async () =>
-                        {
-                            // Get the story details from the news service
-                            var detailsResult = await _newsService.GetStoryDetails(id);
-
-                            // Return the story details if successful, otherwise return null
-                            return detailsResult.Match(
-                                Success => Success,
-                                error => null
-                            );
-                        });
-                    });
-
-                    var storyDetails = await Task.WhenAll(storyDetailsTasks);
+                    var storyDetails = await GetStoryDetails(pagedStories);
 
                     // Convert the story details to StoryDto objects
                     var storyDtos = storyDetails
-                                        .Where(s => s != null)
+                                        .Where(s => s != null && !string.IsNullOrEmpty(s.Url))
                                         .Select(sd => new StoryDto(
                                             sd.Id,
                                             sd.By,
@@ -68,6 +53,29 @@ namespace HackernNews.UseCases.Stories.Queries
                 },
                 async error => await Task.FromResult(error)
             );
+        }
+
+
+        private async Task<StoryDetails[]> GetStoryDetails(IEnumerable<long> pagedStories)
+        {
+            // Fetch the details of each story in the paged stories
+            var storyDetailsTasks = pagedStories.Select(id =>
+            {
+                return _cacheService.Get(id.ToString(), async () =>
+                {
+                    // Get the story details from the news service
+                    var detailsResult = await _newsService.GetStoryDetails(id);
+
+                    // Return the story details if successful, otherwise return null
+                    return detailsResult.Match(
+                        Success => Success,
+                        error => null
+                    );
+                });
+            });
+
+            var storyDetails = await Task.WhenAll(storyDetailsTasks);
+            return storyDetails;
         }
     }
 }

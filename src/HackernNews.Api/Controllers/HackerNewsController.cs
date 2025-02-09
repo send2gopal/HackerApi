@@ -9,7 +9,7 @@ namespace HackernNews.Api.Controllers
     /// Controller for handling Hacker News related requests.
     /// </summary>
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class HackerNewsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -29,7 +29,8 @@ namespace HackernNews.Api.Controllers
         /// <param name="pageNumber">The page number to retrieve.</param>
         /// <param name="pageSize">The number of stories per page.</param>
         /// <returns>A list of new stories.</returns>
-        [HttpGet("new-stories")]
+        [Route("new-stories")]
+        [HttpGet]
         public async Task<IActionResult> GetNewStories([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             var result = await _mediator.Send(new GetNewStoriesQuery(pageNumber, pageSize));
